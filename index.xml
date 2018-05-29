@@ -6,10 +6,25 @@
     <description>Recent content on 微尘</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 11 Nov 2015 20:48:21 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 28 May 2018 23:11:14 +0800</lastBuildDate>
     
 	<atom:link href="https://metadao.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>DRF里 SerializerMethodField 的使用</title>
+      <link>https://metadao.com/post/drf-serializermethodfield/</link>
+      <pubDate>Mon, 28 May 2018 23:11:14 +0800</pubDate>
+      
+      <guid>https://metadao.com/post/drf-serializermethodfield/</guid>
+      <description>现公司的项目使用 DRF 框架开发 Restful API；由于做了前后端分离，后端开发不用考虑前端页面的展示，只要专心写 API 就好了；而且 DRF 也为接口开发提供了很多便利性，很多情况下，按套路简单写写 Model &amp;ndash; Serializer &amp;ndash; View ，很快就能撸好一大批接口；生活似乎会很美好。
+项目开发了大半年，功能越加越多，接口数量也跟着膨胀，有些问题也跟随着浮出水面，有些与接口设计有关，有些是框架限制并没有很完美的解决方法。
+ 最初为了维护的方便，让 App 和 后台 使用了同一套的 API；可惜结果越来越不遂人意。App 开发人员开始抱怨接口返回数据太多，导致响应太慢。而作为 后端开发 也开始感觉到另一方面的不便，由于 App 和 后台 所面向的人群不同，同一接口的话，得同时考虑到不同调用方的权限处理，思虑太多，代码反而更难维护；根据接口的用户做拆分反而能够写出浅显易维护的代码。
+ 由于大量使用 ModelSerializer ，如果需求上只是简单返回 Model 上的字段，是挺方面。可是需求一复杂，返回结果并不能直接对应到某个Model，就有些蛋疼了；常常是用着 DRF 框架的一系列东西，到最后直接拿拼凑出来的 dict 作为接口返回对象。
+  这边要提的是使用 SerializerMethodField 来解决 Model 上并没有直接对应字段的问题。问题所对应的场景如下：
+当前有 产品 和 产品收藏 两张表；当用户调用 产品列表接口时，要一并返回用户是否收藏了该产品(is_favorite)。两张表的简单定义如下
+# 产品表 class Product(Model): product_uuid = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False) name = models.CharField(max_length=40) # 产品收藏表 class Collection(CommonInfo): collection_uuid = models.</description>
+    </item>
     
     <item>
       <title>pymongo</title>

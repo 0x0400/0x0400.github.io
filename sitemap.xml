@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://metadao.com/post/drf-serializermethodfield/</loc>
+    <lastmod>2018-05-28T23:11:14+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://metadao.com/post/pymongo/</loc>
     <lastmod>2015-11-11T20:48:21+08:00</lastmod>
   </url>
@@ -30,13 +35,13 @@
   
   <url>
     <loc>https://metadao.com/post/</loc>
-    <lastmod>2015-11-11T20:48:21+08:00</lastmod>
+    <lastmod>2018-05-28T23:11:14+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://metadao.com/categories/python/</loc>
-    <lastmod>2015-11-11T20:48:21+08:00</lastmod>
+    <lastmod>2018-05-28T23:11:14+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -53,7 +58,7 @@
   
   <url>
     <loc>https://metadao.com/</loc>
-    <lastmod>2015-11-11T20:48:21+08:00</lastmod>
+    <lastmod>2018-05-28T23:11:14+08:00</lastmod>
     <priority>0</priority>
   </url>
   

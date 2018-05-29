@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Jerry Zhang">
+<meta name="description" content="Know thyself.">
+<meta name="generator" content="Hugo 0.41" />
+<title>DRF里 SerializerMethodField 的使用</title>
+<link rel="shortcut icon" href="https://metadao.com/images/favicon.ico">
+<link rel="stylesheet" href="https://metadao.com/css/style.css">
+<link rel="stylesheet" href="https://metadao.com/css/highlight.css">
+
+
+
+<link rel="stylesheet" href="https://metadao.com/css/monosocialiconsfont.css">
+
+
+
+<link href="https://metadao.com/index.xml" rel="alternate" type="application/rss+xml" title="微尘" />
+
+
+<meta property="og:title" content="DRF里 SerializerMethodField 的使用" />
+<meta property="og:description" content="现公司的项目使用 DRF 框架开发 Restful API；由于做了前后端分离，后端开发不用考虑前端页面的展示，只要专心写 API 就好了；而且 DRF 也为接口开发提供了很多便利性，很多情况下，按套路简单写写 Model &ndash; Serializer &ndash; View ，很快就能撸好一大批接口；生活似乎会很美好。
+项目开发了大半年，功能越加越多，接口数量也跟着膨胀，有些问题也跟随着浮出水面，有些与接口设计有关，有些是框架限制并没有很完美的解决方法。
+ 最初为了维护的方便，让 App 和 后台 使用了同一套的 API；可惜结果越来越不遂人意。App 开发人员开始抱怨接口返回数据太多，导致响应太慢。而作为 后端开发 也开始感觉到另一方面的不便，由于 App 和 后台 所面向的人群不同，同一接口的话，得同时考虑到不同调用方的权限处理，思虑太多，代码反而更难维护；根据接口的用户做拆分反而能够写出浅显易维护的代码。
+ 由于大量使用 ModelSerializer ，如果需求上只是简单返回 Model 上的字段，是挺方面。可是需求一复杂，返回结果并不能直接对应到某个Model，就有些蛋疼了；常常是用着 DRF 框架的一系列东西，到最后直接拿拼凑出来的 dict 作为接口返回对象。
+  这边要提的是使用 SerializerMethodField 来解决 Model 上并没有直接对应字段的问题。问题所对应的场景如下：
+当前有 产品 和 产品收藏 两张表；当用户调用 产品列表接口时，要一并返回用户是否收藏了该产品(is_favorite)。两张表的简单定义如下
+# 产品表 class Product(Model): product_uuid = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False) name = models.CharField(max_length=40) # 产品收藏表 class Collection(CommonInfo): collection_uuid = models." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://metadao.com/post/drf-serializermethodfield/" />
+
+
+
+<meta property="article:published_time" content="2018-05-28T23:11:14&#43;08:00"/>
+
+<meta property="article:modified_time" content="2018-05-28T23:11:14&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="DRF里 SerializerMethodField 的使用">
+<meta itemprop="description" content="现公司的项目使用 DRF 框架开发 Restful API；由于做了前后端分离，后端开发不用考虑前端页面的展示，只要专心写 API 就好了；而且 DRF 也为接口开发提供了很多便利性，很多情况下，按套路简单写写 Model &ndash; Serializer &ndash; View ，很快就能撸好一大批接口；生活似乎会很美好。
+项目开发了大半年，功能越加越多，接口数量也跟着膨胀，有些问题也跟随着浮出水面，有些与接口设计有关，有些是框架限制并没有很完美的解决方法。
+ 最初为了维护的方便，让 App 和 后台 使用了同一套的 API；可惜结果越来越不遂人意。App 开发人员开始抱怨接口返回数据太多，导致响应太慢。而作为 后端开发 也开始感觉到另一方面的不便，由于 App 和 后台 所面向的人群不同，同一接口的话，得同时考虑到不同调用方的权限处理，思虑太多，代码反而更难维护；根据接口的用户做拆分反而能够写出浅显易维护的代码。
+ 由于大量使用 ModelSerializer ，如果需求上只是简单返回 Model 上的字段，是挺方面。可是需求一复杂，返回结果并不能直接对应到某个Model，就有些蛋疼了；常常是用着 DRF 框架的一系列东西，到最后直接拿拼凑出来的 dict 作为接口返回对象。
+  这边要提的是使用 SerializerMethodField 来解决 Model 上并没有直接对应字段的问题。问题所对应的场景如下：
+当前有 产品 和 产品收藏 两张表；当用户调用 产品列表接口时，要一并返回用户是否收藏了该产品(is_favorite)。两张表的简单定义如下
+# 产品表 class Product(Model): product_uuid = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False) name = models.CharField(max_length=40) # 产品收藏表 class Collection(CommonInfo): collection_uuid = models.">
+
+
+<meta itemprop="datePublished" content="2018-05-28T23:11:14&#43;08:00" />
+<meta itemprop="dateModified" content="2018-05-28T23:11:14&#43;08:00" />
+<meta itemprop="wordCount" content="139">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DRF里 SerializerMethodField 的使用"/>
+<meta name="twitter:description" content="现公司的项目使用 DRF 框架开发 Restful API；由于做了前后端分离，后端开发不用考虑前端页面的展示，只要专心写 API 就好了；而且 DRF 也为接口开发提供了很多便利性，很多情况下，按套路简单写写 Model &ndash; Serializer &ndash; View ，很快就能撸好一大批接口；生活似乎会很美好。
+项目开发了大半年，功能越加越多，接口数量也跟着膨胀，有些问题也跟随着浮出水面，有些与接口设计有关，有些是框架限制并没有很完美的解决方法。
+ 最初为了维护的方便，让 App 和 后台 使用了同一套的 API；可惜结果越来越不遂人意。App 开发人员开始抱怨接口返回数据太多，导致响应太慢。而作为 后端开发 也开始感觉到另一方面的不便，由于 App 和 后台 所面向的人群不同，同一接口的话，得同时考虑到不同调用方的权限处理，思虑太多，代码反而更难维护；根据接口的用户做拆分反而能够写出浅显易维护的代码。
+ 由于大量使用 ModelSerializer ，如果需求上只是简单返回 Model 上的字段，是挺方面。可是需求一复杂，返回结果并不能直接对应到某个Model，就有些蛋疼了；常常是用着 DRF 框架的一系列东西，到最后直接拿拼凑出来的 dict 作为接口返回对象。
+  这边要提的是使用 SerializerMethodField 来解决 Model 上并没有直接对应字段的问题。问题所对应的场景如下：
+当前有 产品 和 产品收藏 两张表；当用户调用 产品列表接口时，要一并返回用户是否收藏了该产品(is_favorite)。两张表的简单定义如下
+# 产品表 class Product(Model): product_uuid = models.UUIDField( primary_key=True, default=uuid.uuid4, editable=False) name = models.CharField(max_length=40) # 产品收藏表 class Collection(CommonInfo): collection_uuid = models."/>
+<meta name="twitter:site" content="@https://www.twitter.com/codeframe"/>
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+	
+		<a href='https://metadao.com/'> <span class="arrow">←</span>主页</a>
+	
+
+	
+
+	
+		<a class="cta" href="https://metadao.com/index.xml">订阅</a>
+	
+</nav>
+
+    <section id="wrapper">
+        
+        
+<article class="post">
+    <header>
+        <h1>DRF里 SerializerMethodField 的使用</h1>
+        <h2 class="subtitle"></h2>
+        <h2 class="headline">
+        May 28, 2018
+        <br>
+        
+        </h2>
+    </header>
+    <section id="post-body">
+        <p>现公司的项目使用 DRF 框架开发 Restful API；由于做了前后端分离，后端开发不用考虑前端页面的展示，只要专心写 API 就好了；而且 DRF 也为接口开发提供了很多便利性，很多情况下，按套路简单写写 Model &ndash; Serializer &ndash; View ，很快就能撸好一大批接口；生活似乎会很美好。</p>
+
+<p>项目开发了大半年，功能越加越多，接口数量也跟着膨胀，有些问题也跟随着浮出水面，有些与接口设计有关，有些是框架限制并没有很完美的解决方法。</p>
+
+<ol>
+<li><p>最初为了维护的方便，让 App 和 后台 使用了同一套的 API；可惜结果越来越不遂人意。App 开发人员开始抱怨接口返回数据太多，导致响应太慢。而作为 后端开发 也开始感觉到另一方面的不便，由于 App 和 后台 所面向的人群不同，同一接口的话，得同时考虑到不同调用方的权限处理，思虑太多，代码反而更难维护；根据接口的用户做拆分反而能够写出浅显易维护的代码。</p></li>
+
+<li><p>由于大量使用 ModelSerializer ，如果需求上只是简单返回 Model 上的字段，是挺方面。可是需求一复杂，返回结果并不能直接对应到某个Model，就有些蛋疼了；常常是用着 DRF 框架的一系列东西，到最后直接拿拼凑出来的 dict 作为接口返回对象。</p></li>
+</ol>
+
+<p>这边要提的是使用 SerializerMethodField 来解决 Model 上并没有直接对应字段的问题。问题所对应的场景如下：</p>
+
+<p>当前有 <code>产品</code> 和 <code>产品收藏</code> 两张表；当用户调用 产品列表接口时，要一并返回用户是否收藏了该产品(is_favorite)。两张表的简单定义如下</p>
+
+<pre><code class="language-python"># 产品表
+class Product(Model):
+    product_uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=40)
+
+
+# 产品收藏表
+class Collection(CommonInfo):
+    collection_uuid = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False)
+    agent = models.ForeignKey(
+        'User', on_delete=models.DO_NOTHING)
+</code></pre>
+
+<p>这个需求麻烦的地方，在于返回的数据跟调用者是相关的，而这又没法通过简单的给 Model 添加 Property 来解决；所以在 Model这个层面是无解。在 Serializer 这个层面，如果之前没接触过 SerializerMethodField ，写出的代码/方案会很丑（比如定义一个普通的 Serializer类，然后定义 product 和 is_favorite 字段）。以下是使用 SerializerMethodField 之后，个人比较满意的做法：</p>
+
+<pre><code class="language-python">class ProductSerializer(ModelSerializer):
+    is_favorite = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Product
+        fields = ('product_uuid', 'name', 'is_favorite')
+
+    def get_is_favorite(self, obj):
+        ''' 获取 当前用户是否收藏了该产品 '''
+        request = self.context.get('request', None)
+        if not request:
+            return False
+        if not request.user or request.user.is_anonymous:
+            return False
+        return Collection.objects.filter(
+            product=obj.pk, user=request.user.pk).exists()
+</code></pre>
+
+<p>参考链接：</p>
+
+<ul>
+<li><a href="http://www.django-rest-framework.org/">DRF</a></li>
+<li><a href="http://www.django-rest-framework.org/api-guide/fields/#serializermethodfield">SerializerMethodField</a></li>
+</ul>
+
+    </section>
+</article>
+
+<footer id="post-meta" class="clearfix">
+    <a href="https://twitter.com/codeframe">
+    <img class="avatar" src="https://metadao.com/images/avatar.png">
+    <div>
+        <span class="dark">Jerry Zhang</span>
+        <span>I&#39;m an enthusiastic gopher.</span>
+    </div>
+    </a>
+    <section id="sharing">
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fmetadao.com%2fpost%2fdrf-serializermethodfield%2f - DRF%e9%87%8c%20SerializerMethodField%20%e7%9a%84%e4%bd%bf%e7%94%a8 by @codeframe"><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+    </section>
+</footer>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "0x400" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<ul id="post-list" class="archive readmore">
+    <h3>更多</h3>
+
+    
+    
+    
+        <li>
+            <a href="/post/pymongo/">pymongo<aside class="dates">Nov 11 2015</aside></a>
+        </li>
+    
+        <li>
+            <a href="/post/python_namespace/">Python namespace<aside class="dates">Sep 9 2015</aside></a>
+        </li>
+    
+        <li>
+            <a href="/post/uiscrollview/">UIScrollView 子视图的 AspectFit 效果<aside class="dates">Jul 27 2015</aside></a>
+        </li>
+    
+</ul>
+
+
+
+        <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    
+    <a class="symbol" href="https://www.github.com/0x0400">
+        circlegithub
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/codeframe">
+        circletwitterbird
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2018 Jerry Zhang
+    
+    </p>
+</footer>
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://metadao.com/js/main.js"></script>
+<script src="https://metadao.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-40054988-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+</body>
+</html>
