@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Jerry Zhang">
+<meta name="description" content="Know thyself.">
+<meta name="generator" content="Hugo 0.41" />
+<title>Python namespace</title>
+<link rel="shortcut icon" href="https://metadao.com/images/favicon.ico">
+<link rel="stylesheet" href="https://metadao.com/css/style.css">
+<link rel="stylesheet" href="https://metadao.com/css/highlight.css">
+
+
+
+<link rel="stylesheet" href="https://metadao.com/css/monosocialiconsfont.css">
+
+
+
+<link href="https://metadao.com/index.xml" rel="alternate" type="application/rss+xml" title="微尘" />
+
+
+<meta property="og:title" content="Python namespace" />
+<meta property="og:description" content="最近看 Intermediate Python , 看到关于 global、nonlocal 这两个关键字的 tip 时候，才想起自己虽然使用 Python 多年，但对于 变量的命名空间 其实还是有些模糊的。
+在 Python 里，一个变量名是否已定义 是通过 LEGB 规则来查找的。所谓 LEGB 指的是 Local -&gt; Enclosing function local -&gt; Global (module) -&gt; Built-in (Python)。如果按顺序查找四个 namespace ，仍没有找到对应变量名，则抛出 NameError 的异常。
+如下几点是当初自己比较困惑，或者说是 Python 独特的地方：
+ 不属于 local namespace 、但属于其他命名空间里的变量可以访问，但无法重新绑定。如果进行赋值操作的话，是创建新的本地变量，而不是对原变量进行修改。如果想修改原变量的话，就要用到 global、nonlocal 这些关键字了。 if 语句、for 循环 并没有创建新的命名空间；这些语句里创建的新变量，在语句之后还是可以使用的。这一点对于从其他语言过来的程序员来说，有点出乎意料。 class 的属性，在 method 里是没法直接访问的。Python的面向对象实现，对于有 Java基础的学习者来说，总感觉有点怪怪的。  参考：
+ Short Description of Python Scoping Rules Python Namespace and Scope Naming and binding  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://metadao.com/post/python_namespace/" />
+
+
+
+<meta property="article:published_time" content="2015-09-09T16:27:04&#43;08:00"/>
+
+<meta property="article:modified_time" content="2015-09-09T16:27:04&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Python namespace">
+<meta itemprop="description" content="最近看 Intermediate Python , 看到关于 global、nonlocal 这两个关键字的 tip 时候，才想起自己虽然使用 Python 多年，但对于 变量的命名空间 其实还是有些模糊的。
+在 Python 里，一个变量名是否已定义 是通过 LEGB 规则来查找的。所谓 LEGB 指的是 Local -&gt; Enclosing function local -&gt; Global (module) -&gt; Built-in (Python)。如果按顺序查找四个 namespace ，仍没有找到对应变量名，则抛出 NameError 的异常。
+如下几点是当初自己比较困惑，或者说是 Python 独特的地方：
+ 不属于 local namespace 、但属于其他命名空间里的变量可以访问，但无法重新绑定。如果进行赋值操作的话，是创建新的本地变量，而不是对原变量进行修改。如果想修改原变量的话，就要用到 global、nonlocal 这些关键字了。 if 语句、for 循环 并没有创建新的命名空间；这些语句里创建的新变量，在语句之后还是可以使用的。这一点对于从其他语言过来的程序员来说，有点出乎意料。 class 的属性，在 method 里是没法直接访问的。Python的面向对象实现，对于有 Java基础的学习者来说，总感觉有点怪怪的。  参考：
+ Short Description of Python Scoping Rules Python Namespace and Scope Naming and binding  ">
+
+
+<meta itemprop="datePublished" content="2015-09-09T16:27:04&#43;08:00" />
+<meta itemprop="dateModified" content="2015-09-09T16:27:04&#43;08:00" />
+<meta itemprop="wordCount" content="68">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python namespace"/>
+<meta name="twitter:description" content="最近看 Intermediate Python , 看到关于 global、nonlocal 这两个关键字的 tip 时候，才想起自己虽然使用 Python 多年，但对于 变量的命名空间 其实还是有些模糊的。
+在 Python 里，一个变量名是否已定义 是通过 LEGB 规则来查找的。所谓 LEGB 指的是 Local -&gt; Enclosing function local -&gt; Global (module) -&gt; Built-in (Python)。如果按顺序查找四个 namespace ，仍没有找到对应变量名，则抛出 NameError 的异常。
+如下几点是当初自己比较困惑，或者说是 Python 独特的地方：
+ 不属于 local namespace 、但属于其他命名空间里的变量可以访问，但无法重新绑定。如果进行赋值操作的话，是创建新的本地变量，而不是对原变量进行修改。如果想修改原变量的话，就要用到 global、nonlocal 这些关键字了。 if 语句、for 循环 并没有创建新的命名空间；这些语句里创建的新变量，在语句之后还是可以使用的。这一点对于从其他语言过来的程序员来说，有点出乎意料。 class 的属性，在 method 里是没法直接访问的。Python的面向对象实现，对于有 Java基础的学习者来说，总感觉有点怪怪的。  参考：
+ Short Description of Python Scoping Rules Python Namespace and Scope Naming and binding  "/>
+<meta name="twitter:site" content="@https://www.twitter.com/codeframe"/>
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+	
+		<a href='https://metadao.com/'> <span class="arrow">←</span>主页</a>
+	
+
+	
+
+	
+		<a class="cta" href="https://metadao.com/index.xml">订阅</a>
+	
+</nav>
+
+    <section id="wrapper">
+        
+        
+<article class="post">
+    <header>
+        <h1>Python namespace</h1>
+        <h2 class="subtitle"></h2>
+        <h2 class="headline">
+        September 9, 2015
+        <br>
+        
+        </h2>
+    </header>
+    <section id="post-body">
+        <p>最近看 <a href="http://book.pythontips.com/en/latest/">Intermediate Python</a> , 看到关于 global、nonlocal 这两个关键字的 tip 时候，才想起自己虽然使用 Python 多年，但对于 变量的命名空间 其实还是有些模糊的。</p>
+
+<p>在 Python 里，一个变量名是否已定义 是通过 LEGB 规则来查找的。所谓 LEGB 指的是 Local -&gt; Enclosing function local -&gt; Global (module) -&gt; Built-in (Python)。如果按顺序查找四个 namespace ，仍没有找到对应变量名，则抛出 NameError 的异常。</p>
+
+<p>如下几点是当初自己比较困惑，或者说是 Python 独特的地方：</p>
+
+<ul>
+<li>不属于 local namespace 、但属于其他命名空间里的变量可以访问，但无法重新绑定。如果进行赋值操作的话，是<strong>创建新的本地变量</strong>，而不是对原变量进行修改。如果想修改原变量的话，就要用到 global、nonlocal 这些关键字了。</li>
+<li>if  语句、for 循环 并没有创建新的命名空间；这些语句里创建的新变量，在语句之后还是可以使用的。这一点对于从其他语言过来的程序员来说，有点出乎意料。</li>
+<li>class 的属性，在 method 里是没法直接访问的。Python的面向对象实现，对于有 Java基础的学习者来说，总感觉有点怪怪的。</li>
+</ul>
+
+<p>参考：</p>
+
+<ol>
+<li><a href="http://stackoverflow.com/questions/291978/short-description-of-python-scoping-rules">Short Description of Python Scoping Rules</a></li>
+<li><a href="http://www.programiz.com/python-programming/namespace">Python Namespace and Scope</a></li>
+<li><a href="https://docs.python.org/2/reference/executionmodel.html#naming-and-binding">Naming and binding</a></li>
+</ol>
+
+    </section>
+</article>
+
+<footer id="post-meta" class="clearfix">
+    <a href="https://twitter.com/codeframe">
+    <img class="avatar" src="https://metadao.com/images/avatar.png">
+    <div>
+        <span class="dark">Jerry Zhang</span>
+        <span>I&#39;m an enthusiastic gopher.</span>
+    </div>
+    </a>
+    <section id="sharing">
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fmetadao.com%2fpost%2fpython_namespace%2f - Python%20namespace by @codeframe"><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+    </section>
+</footer>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "0x400" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<ul id="post-list" class="archive readmore">
+    <h3>更多</h3>
+
+    
+    
+    
+        <li>
+            <a href="/post/pymongo/">pymongo<aside class="dates">Nov 11 2015</aside></a>
+        </li>
+    
+        <li>
+            <a href="/post/uiscrollview/">UIScrollView 子视图的 AspectFit 效果<aside class="dates">Jul 27 2015</aside></a>
+        </li>
+    
+</ul>
+
+
+
+        <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    
+    <a class="symbol" href="https://www.github.com/0x0400">
+        circlegithub
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/codeframe">
+        circletwitterbird
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2018 Jerry Zhang
+    
+    </p>
+</footer>
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://metadao.com/js/main.js"></script>
+<script src="https://metadao.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-40054988-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+</body>
+</html>

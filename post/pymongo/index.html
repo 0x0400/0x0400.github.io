@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Jerry Zhang">
+<meta name="description" content="Know thyself.">
+<meta name="generator" content="Hugo 0.41" />
+<title>pymongo</title>
+<link rel="shortcut icon" href="https://metadao.com/images/favicon.ico">
+<link rel="stylesheet" href="https://metadao.com/css/style.css">
+<link rel="stylesheet" href="https://metadao.com/css/highlight.css">
+
+
+
+<link rel="stylesheet" href="https://metadao.com/css/monosocialiconsfont.css">
+
+
+
+<link href="https://metadao.com/index.xml" rel="alternate" type="application/rss+xml" title="微尘" />
+
+
+<meta property="og:title" content="pymongo" />
+<meta property="og:description" content="因为项目使用到 MongoDB 的缘故，接触 PyMongo 也有好些年头了。PyMongo 返回的记录对应到 python 的对象是普通的 dictionary，对于这样的对应关系，自己一直以来甚是满意。既然用了 MongoDB，为何还要像关系型数据库一样定义Model呢？使用 dict 对象，可存储任意的结构到 collection，想来就是件自由爽快的事。最初也曾用过 MongoKit，也看过另一个同事自己写的简单封装，但一直觉得没多大必要去使用ORM。
+前一阵子写个后台项目，使用了 Flask-Login 扩展模块，为了配合 UserMixin 定义一个 User类，便在原同事代码的基础上增改了一些代码，封装了一个简陋的ORM库。通过项目的使用情况而言，个人感觉比使用原生 PyMongo 来得方便明了。在此也深觉自己受薛老大的影响过深，在 Python 代码的编写上倾向于面向过程，而不是面向对象。
+参考：
+ MongoDB PyMongo PyMongo 的简单封装  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://metadao.com/post/pymongo/" />
+
+
+
+<meta property="article:published_time" content="2015-11-11T20:48:21&#43;08:00"/>
+
+<meta property="article:modified_time" content="2015-11-11T20:48:21&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="pymongo">
+<meta itemprop="description" content="因为项目使用到 MongoDB 的缘故，接触 PyMongo 也有好些年头了。PyMongo 返回的记录对应到 python 的对象是普通的 dictionary，对于这样的对应关系，自己一直以来甚是满意。既然用了 MongoDB，为何还要像关系型数据库一样定义Model呢？使用 dict 对象，可存储任意的结构到 collection，想来就是件自由爽快的事。最初也曾用过 MongoKit，也看过另一个同事自己写的简单封装，但一直觉得没多大必要去使用ORM。
+前一阵子写个后台项目，使用了 Flask-Login 扩展模块，为了配合 UserMixin 定义一个 User类，便在原同事代码的基础上增改了一些代码，封装了一个简陋的ORM库。通过项目的使用情况而言，个人感觉比使用原生 PyMongo 来得方便明了。在此也深觉自己受薛老大的影响过深，在 Python 代码的编写上倾向于面向过程，而不是面向对象。
+参考：
+ MongoDB PyMongo PyMongo 的简单封装  ">
+
+
+<meta itemprop="datePublished" content="2015-11-11T20:48:21&#43;08:00" />
+<meta itemprop="dateModified" content="2015-11-11T20:48:21&#43;08:00" />
+<meta itemprop="wordCount" content="29">
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="pymongo"/>
+<meta name="twitter:description" content="因为项目使用到 MongoDB 的缘故，接触 PyMongo 也有好些年头了。PyMongo 返回的记录对应到 python 的对象是普通的 dictionary，对于这样的对应关系，自己一直以来甚是满意。既然用了 MongoDB，为何还要像关系型数据库一样定义Model呢？使用 dict 对象，可存储任意的结构到 collection，想来就是件自由爽快的事。最初也曾用过 MongoKit，也看过另一个同事自己写的简单封装，但一直觉得没多大必要去使用ORM。
+前一阵子写个后台项目，使用了 Flask-Login 扩展模块，为了配合 UserMixin 定义一个 User类，便在原同事代码的基础上增改了一些代码，封装了一个简陋的ORM库。通过项目的使用情况而言，个人感觉比使用原生 PyMongo 来得方便明了。在此也深觉自己受薛老大的影响过深，在 Python 代码的编写上倾向于面向过程，而不是面向对象。
+参考：
+ MongoDB PyMongo PyMongo 的简单封装  "/>
+<meta name="twitter:site" content="@https://www.twitter.com/codeframe"/>
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+	
+		<a href='https://metadao.com/'> <span class="arrow">←</span>主页</a>
+	
+
+	
+
+	
+		<a class="cta" href="https://metadao.com/index.xml">订阅</a>
+	
+</nav>
+
+    <section id="wrapper">
+        
+        
+<article class="post">
+    <header>
+        <h1>pymongo</h1>
+        <h2 class="subtitle"></h2>
+        <h2 class="headline">
+        November 11, 2015
+        <br>
+        
+        </h2>
+    </header>
+    <section id="post-body">
+        <p>因为项目使用到 MongoDB 的缘故，接触 PyMongo 也有好些年头了。PyMongo 返回的记录对应到 python 的对象是普通的 dictionary，对于这样的对应关系，自己一直以来甚是满意。既然用了 MongoDB，为何还要像关系型数据库一样定义Model呢？使用 dict 对象，可存储任意的结构到 collection，想来就是件自由爽快的事。最初也曾用过 MongoKit，也看过另一个同事自己写的简单封装，但一直觉得没多大必要去使用ORM。</p>
+
+<p>前一阵子写个后台项目，使用了 Flask-Login 扩展模块，为了配合 UserMixin 定义一个 User类，便在原同事代码的基础上增改了一些代码，封装了一个简陋的ORM库。通过项目的使用情况而言，个人感觉比使用原生 PyMongo 来得方便明了。在此也深觉自己受<strong>薛老大</strong>的影响过深，在 Python 代码的编写上倾向于面向过程，而不是面向对象。</p>
+
+<p>参考：</p>
+
+<ol>
+<li><a href="https://www.mongodb.org/">MongoDB</a></li>
+<li><a href="http://api.mongodb.org/python/current/">PyMongo</a></li>
+<li><a href="https://gist.github.com/metadao/abea733d27f64e868aba">PyMongo 的简单封装</a></li>
+</ol>
+
+    </section>
+</article>
+
+<footer id="post-meta" class="clearfix">
+    <a href="https://twitter.com/codeframe">
+    <img class="avatar" src="https://metadao.com/images/avatar.png">
+    <div>
+        <span class="dark">Jerry Zhang</span>
+        <span>I&#39;m an enthusiastic gopher.</span>
+    </div>
+    </a>
+    <section id="sharing">
+        <a class="twitter" href="https://twitter.com/intent/tweet?text=https%3a%2f%2fmetadao.com%2fpost%2fpymongo%2f - pymongo by @codeframe"><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+    </section>
+</footer>
+
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "0x400" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<ul id="post-list" class="archive readmore">
+    <h3>更多</h3>
+
+    
+    
+    
+        <li>
+            <a href="/post/python_namespace/">Python namespace<aside class="dates">Sep 9 2015</aside></a>
+        </li>
+    
+        <li>
+            <a href="/post/uiscrollview/">UIScrollView 子视图的 AspectFit 效果<aside class="dates">Jul 27 2015</aside></a>
+        </li>
+    
+</ul>
+
+
+
+        <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    
+    <a class="symbol" href="https://www.github.com/0x0400">
+        circlegithub
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/codeframe">
+        circletwitterbird
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2018 Jerry Zhang
+    
+    </p>
+</footer>
+
+    </section>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://metadao.com/js/main.js"></script>
+<script src="https://metadao.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-40054988-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+</body>
+</html>

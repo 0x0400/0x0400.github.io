@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Swift on 微尘</title>
+    <link>https://metadao.com/categories/swift/</link>
+    <description>Recent content in Swift on 微尘</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 27 Jul 2015 17:48:41 +0800</lastBuildDate>
+    
+	<atom:link href="https://metadao.com/categories/swift/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>UIScrollView 子视图的 AspectFit 效果</title>
+      <link>https://metadao.com/post/uiscrollview/</link>
+      <pubDate>Mon, 27 Jul 2015 17:48:41 +0800</pubDate>
+      
+      <guid>https://metadao.com/post/uiscrollview/</guid>
+      <description>最近在做一个简单 Demo，类似于微信朋友圈里的照片查看器。通过左右划查看不同照片，使用 UIPageViewController 很快就实现了；单张照片的缩放，原本以为在 UIImageView 外套个 UIScrollView 就好了；但简单的事情，却往往带来出人意料的挫败。
+ UIScrollView 的 contentSize 属性是这个类最基本的属性。在这个 Demo 里，自然而然想到的是将 contentSize 设置成图片的大小，然后将 contentMode 设成 AspectFit。但在 UIScrollView 里，个人感觉 contentMode 和 contentSize 是有冲突的，就不该去碰这个属性。而且 contentSize 的选择也不必拘泥于图片的实际大小，完全可以只设置成当前屏幕的大小（然后将 UIImageView 的 frame 也设置成当前屏幕大小，contentMode 设置成 ApectFit。然后，就不用往下看了&amp;hellip;）。 不要在 viewDidLoad 里就去获取某个视图的 frame ，这个时间点获取到的值基本上都是错误的。 通过合理的计算来设置 UIScrollView 的 zoomScale 和 contentInset 属性，从而达到 AspectFit 的效果。  参考链接:
+ A Beginner’s Guide to UIScrollView Why am I having to manually set my view&amp;rsquo;s frame in viewDidLoad? 个人 Demo  </description>
+    </item>
+    
+  </channel>
+</rss>

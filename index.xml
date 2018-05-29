@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>微尘</title>
+    <link>https://metadao.com/</link>
+    <description>Recent content on 微尘</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 11 Nov 2015 20:48:21 +0800</lastBuildDate>
+    
+	<atom:link href="https://metadao.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>pymongo</title>
+      <link>https://metadao.com/post/pymongo/</link>
+      <pubDate>Wed, 11 Nov 2015 20:48:21 +0800</pubDate>
+      
+      <guid>https://metadao.com/post/pymongo/</guid>
+      <description>因为项目使用到 MongoDB 的缘故，接触 PyMongo 也有好些年头了。PyMongo 返回的记录对应到 python 的对象是普通的 dictionary，对于这样的对应关系，自己一直以来甚是满意。既然用了 MongoDB，为何还要像关系型数据库一样定义Model呢？使用 dict 对象，可存储任意的结构到 collection，想来就是件自由爽快的事。最初也曾用过 MongoKit，也看过另一个同事自己写的简单封装，但一直觉得没多大必要去使用ORM。
+前一阵子写个后台项目，使用了 Flask-Login 扩展模块，为了配合 UserMixin 定义一个 User类，便在原同事代码的基础上增改了一些代码，封装了一个简陋的ORM库。通过项目的使用情况而言，个人感觉比使用原生 PyMongo 来得方便明了。在此也深觉自己受薛老大的影响过深，在 Python 代码的编写上倾向于面向过程，而不是面向对象。
+参考：
+ MongoDB PyMongo PyMongo 的简单封装  </description>
+    </item>
+    
+    <item>
+      <title>Python namespace</title>
+      <link>https://metadao.com/post/python_namespace/</link>
+      <pubDate>Wed, 09 Sep 2015 16:27:04 +0800</pubDate>
+      
+      <guid>https://metadao.com/post/python_namespace/</guid>
+      <description>最近看 Intermediate Python , 看到关于 global、nonlocal 这两个关键字的 tip 时候，才想起自己虽然使用 Python 多年，但对于 变量的命名空间 其实还是有些模糊的。
+在 Python 里，一个变量名是否已定义 是通过 LEGB 规则来查找的。所谓 LEGB 指的是 Local -&amp;gt; Enclosing function local -&amp;gt; Global (module) -&amp;gt; Built-in (Python)。如果按顺序查找四个 namespace ，仍没有找到对应变量名，则抛出 NameError 的异常。
+如下几点是当初自己比较困惑，或者说是 Python 独特的地方：
+ 不属于 local namespace 、但属于其他命名空间里的变量可以访问，但无法重新绑定。如果进行赋值操作的话，是创建新的本地变量，而不是对原变量进行修改。如果想修改原变量的话，就要用到 global、nonlocal 这些关键字了。 if 语句、for 循环 并没有创建新的命名空间；这些语句里创建的新变量，在语句之后还是可以使用的。这一点对于从其他语言过来的程序员来说，有点出乎意料。 class 的属性，在 method 里是没法直接访问的。Python的面向对象实现，对于有 Java基础的学习者来说，总感觉有点怪怪的。  参考：
+ Short Description of Python Scoping Rules Python Namespace and Scope Naming and binding  </description>
+    </item>
+    
+    <item>
+      <title>UIScrollView 子视图的 AspectFit 效果</title>
+      <link>https://metadao.com/post/uiscrollview/</link>
+      <pubDate>Mon, 27 Jul 2015 17:48:41 +0800</pubDate>
+      
+      <guid>https://metadao.com/post/uiscrollview/</guid>
+      <description>最近在做一个简单 Demo，类似于微信朋友圈里的照片查看器。通过左右划查看不同照片，使用 UIPageViewController 很快就实现了；单张照片的缩放，原本以为在 UIImageView 外套个 UIScrollView 就好了；但简单的事情，却往往带来出人意料的挫败。
+ UIScrollView 的 contentSize 属性是这个类最基本的属性。在这个 Demo 里，自然而然想到的是将 contentSize 设置成图片的大小，然后将 contentMode 设成 AspectFit。但在 UIScrollView 里，个人感觉 contentMode 和 contentSize 是有冲突的，就不该去碰这个属性。而且 contentSize 的选择也不必拘泥于图片的实际大小，完全可以只设置成当前屏幕的大小（然后将 UIImageView 的 frame 也设置成当前屏幕大小，contentMode 设置成 ApectFit。然后，就不用往下看了&amp;hellip;）。 不要在 viewDidLoad 里就去获取某个视图的 frame ，这个时间点获取到的值基本上都是错误的。 通过合理的计算来设置 UIScrollView 的 zoomScale 和 contentInset 属性，从而达到 AspectFit 的效果。  参考链接:
+ A Beginner’s Guide to UIScrollView Why am I having to manually set my view&amp;rsquo;s frame in viewDidLoad? 个人 Demo  </description>
+    </item>
+    
+  </channel>
+</rss>
